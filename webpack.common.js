@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const themePath = require('./themePath');
 // const devMode = process.env.NODE_ENV !== 'production';
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   template: './src/index.html',
@@ -38,6 +38,12 @@ module.exports = {
           'style-loader',
           `${require.resolve('css-loader')}?sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]`,
           `${require.resolve('sass-loader')}?sourceMap`,
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: themePath,
+            },
+          },
         ],
       },
     ],
