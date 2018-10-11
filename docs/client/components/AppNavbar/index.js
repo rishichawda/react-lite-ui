@@ -13,6 +13,13 @@ class Navbar extends React.Component {
     this.handleNavClick = this.handleNavClick.bind(this);
   }
 
+  componentDidMount() {
+    let path = window.location.pathname.split('/');
+    this.setState({
+      activeLink: path[path.length - 1]
+    })
+  }
+
   handleNavClick(activeLink) {
     this.setState({
       activeLink,
@@ -42,12 +49,14 @@ class Navbar extends React.Component {
           </Col>
           <Col xs={12} sm={6} mdOffset={1} md={5} lg={4} lgOffset={1}>
             <Row className="nav-wrapper nav-link full-height">
-              <Col xs={3} sm={3}className="center-align">
+              <Col xs={3} sm={3} className={`center-align ${activeLink === 'install' && 'active'}`}>
                 <Link
                   to="/install"
                   onClick={() => { this.handleNavClick('install'); }}
                 >
+                <div>
                   <span className={`${activeLink === 'install' && 'active'}`}> Install </span>
+                </div>
                 </Link>
               </Col>
               <Col xs={5} sm={6} className={`center-align ${activeLink === 'playground' && 'active'}`}>
@@ -55,7 +64,9 @@ class Navbar extends React.Component {
                   to="/playground"
                   onClick={() => { this.handleNavClick('playground'); }}
                 >
+                <div>
                   <span className={`${activeLink === 'playground' && 'active'}`}> Playground </span>
+                </div>
                 </Link>
               </Col>
               <Col xs={2} sm={2} className={`center-align ${activeLink === 'components' && 'active'}`}>
@@ -63,7 +74,9 @@ class Navbar extends React.Component {
                   to="/components"
                   onClick={() => { this.handleNavClick('components'); }}
                 >
+                <div>
                   <span className={`${activeLink === 'components' && 'active'}`}>Usage</span>
+                </div>
                 </Link>
               </Col>
             </Row>

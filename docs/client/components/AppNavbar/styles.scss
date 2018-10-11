@@ -1,72 +1,109 @@
-@import '../common/styles.scss';
-
+@import "../common/styles.scss";
 body {
-  margin: 0;
-  line-height: 1.5;
-  font-family: 'Raleway';
+    margin: 0;
+    line-height: 1.5;
+    font-family: "Raleway";
 }
 
 :local(.navbar) {
-  z-index: 10;
-  position: fixed;
-  min-height: 75px;
-  width: 100%;
-  top: 0;
-  background-color: $primary-blue;
-  margin: 0;
-  color: $primary-white;
-  font-size: 20px;
-  font-weight: bold;
-  animation: slideInFromTop 2s;
-  @keyframes slideInFromTop {
-    0% {
-      top: -75px;
-      opacity: 0;
-    }
-
-    100% {
-      top: 0;
-      opacity: 1;
-    }
-  }
-  .full-height {
-    height: 100%;
-  }
-  .center-align {
-    text-align: center;
-  }
-  .parent-row {
-    min-height: 75px;
-  }
-
-  .nav-wrapper {
-    display: flex;
-    align-items: center;
-    &.logo {
-      padding-left: 15px;
-    }
-    &.title {
-      margin-left: 10px;
-      font-size: 30px;
-    }
-    &.nav-link {
-      font-size: 18px;
-      a {
-        color: $primary-white;
-        text-decoration: none;
-        &:focus, &:hover, &:visited, &:link, &:active {
-            text-decoration: none;
+    z-index: 10;
+    position: fixed;
+    min-height: 55px;
+    width: 100%;
+    top: 0;
+    background-color: $primary-blue;
+    margin: 0;
+    color: $primary-white;
+    font-size: 20px;
+    font-weight: bold;
+    animation: slideInFromTop 1.8s;
+    @keyframes slideInFromTop {
+        0% {
+            top: -75px;
+            opacity: 0;
         }
-        display: block;
-        min-height: 35px;
-        span {
-          &.active {
-            padding-bottom: 2px;
-            border-bottom: 2px solid $primary-yellow;
+        100% {
+            top: 0;
+            opacity: 1;
+        }
+    }
+    .full-height {
+        height: 100%;
+    }
+    .center-align {
+        text-align: center;
+    }
+    .parent-row {
+        min-height: 75px;
+    }
+    .nav-wrapper {
+        align-items: center;
+        display: grid;
+        grid-template-columns: auto auto auto;
+        padding-right: 5%;
+        box-sizing: border-box;
+        &.logo {
+          padding-left: 15px;
+        }
+        &.title {
+            margin-left: 10px;
+            font-size: 30px;
           }
+          &.nav-link {
+            font-size: 18px;
+            div {
+              height: 100%;
+              display: inline-flex;
+              min-width: 100%;
+              align-items: center;
+              justify-content: center;
+              &.active {
+                border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                    background-color: white;
+                }
+                a {
+                    color: $primary-white;
+                    text-decoration: none;
+                    &:focus,
+                    &:hover,
+                    &:visited,
+                    &:link,
+                    &:active {
+                        text-decoration: none;
+                    }
+                    display: block;
+                    min-height: 35px;
+                    div {
+                        width: fit-content;
+                        display: inline-flex;
+                        justify-content: center;
+                        span {
+                            &.active {
+                                color: black;
+                                &::after {
+                                    display: none;
+                                }
+                            }
+                            &:after {
+                                display: block;
+                                content: "";
+                                margin: 0.2em auto auto auto;
+                                transform: scaleX(0);
+                                opacity: 0;
+                                border-bottom: 2px solid #fdd835;
+                                transition: 0.25s ease-in-out;
+                            }
+                            &:hover {
+                                &:after {
+                                    opacity: 1;
+                                    transform: scaleX(1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
-

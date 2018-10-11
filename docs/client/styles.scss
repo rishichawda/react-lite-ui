@@ -1,6 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+
 :local(.app-wrapper) {
+  &::-webkit-scrollbar {
+    position: absolute;
+    z-index: 2;
+  }
   width: 100%;
+  font-family: 'Lato', sans-serif;
   .content-wrapper {
     margin-top: 100px;
+    animation: fadeIn;
+        animation-duration: 2s;
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+        
+          100% {
+            opacity: 1;
+          }
+        }
   }
 }

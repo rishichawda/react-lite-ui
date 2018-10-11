@@ -23,17 +23,6 @@
         width: 60%;
         font-size: 20px;
         color: $primary-dark-font;
-        animation: fadeIn;
-        animation-duration: 3.5s;
-        @keyframes fadeIn {
-          0% {
-            opacity: 0;
-          }
-        
-          100% {
-            opacity: 1;
-          }
-        }
     }
     .advantage-section {
         margin: 30px auto;
@@ -59,15 +48,6 @@
                         }
                     }
                 }
-            }
-        }
-        animation: fadeInUpFromBottom 1.8s;
-        @keyframes fadeInUpFromBottom {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
             }
         }
     }
