@@ -17,6 +17,18 @@ body {
   color: $primary-white;
   font-size: 20px;
   font-weight: bold;
+  animation: slideInFromTop 2s;
+  @keyframes slideInFromTop {
+    0% {
+      top: -75px;
+      opacity: 0;
+    }
+
+    100% {
+      top: 0;
+      opacity: 1;
+    }
+  }
   .full-height {
     height: 100%;
   }
