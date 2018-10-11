@@ -29,6 +29,7 @@ class PlaygroundPage extends React.Component {
     const { history } = this.props;
     const url = history.location.pathname;
     const currentRoute = url.substring(url.lastIndexOf('/')+1);
+    console.log(currentRoute);
     const queryComponent = componentList.filter(component => component.name.toLowerCase() === currentRoute);
     if(queryComponent.length) {
       this.setState({
