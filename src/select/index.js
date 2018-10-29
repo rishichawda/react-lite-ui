@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { themr } from 'react-css-themr';
 import defaultTheme from './theme.scss';
 
+const { findDOMNode: findNode } = ReactDOM;
 
 class Select extends Component {
   constructor(props) {
@@ -16,7 +18,17 @@ class Select extends Component {
       selected: { label: '' },
       open: false,
     };
+    this.listRef = null;
+    this.focusedElement = null;
   }
+
+  getScrollState = () => {
+    const threshold =
+      findNode(this.listRef).offsetTop +
+      findNode(this.listRef).offsetHeight;
+    const focusedItem = findNode(this.focusedElement);
+    return { threshold, focusedItem };
+  };
 
   // Handle the click event when user selects / clicks on an option from the dropdown.
   handleSelect = (selected) => {
@@ -32,7 +44,6 @@ class Select extends Component {
     });
   };
 
-
   /**
    * Handles key down events on select component for keyboard navigation.
    * @memberof Select
@@ -42,19 +53,49 @@ class Select extends Component {
     const { options } = this.props;
     switch (key) {
       case 'ArrowDown':
-        this.setState(prevState => ({
-          focus: (
-            (prevState.focus === undefined
-              ? -1
-              : prevState.focus
-            ) + 1
-          ) % (options.length),
-        }));
+        this.setState(
+          prevState => ({
+            focus: (
+              (prevState.focus === undefined
+                ? -1
+                : prevState.focus
+              ) + 1
+            ) % (options.length),
+          }),
+          () => {
+            const { threshold, focusedItem } = this.getScrollState();
+            // Handles cyclic focus
+            if (
+              focusedItem &&
+            focusedItem.offsetHeight + focusedItem.offsetTop > threshold
+            ) {
+              findNode(this.listRef).scrollTop +=
+              focusedItem.offsetHeight;
+            } else if (!this.state.focus) {
+              findNode(this.listRef).scrollTop = 0;
+            }
+          },
+        );
         break;
       case 'ArrowUp':
-        this.setState(prevState => ({
-          focus: ((options.length) + ((prevState.focus || 0) - 1)) % (options.length),
-        }));
+        this.setState(
+          prevState => ({
+            focus: ((options.length) + ((prevState.focus || 0) - 1)) % (options.length),
+          }),
+          () => {
+            const { threshold, focusedItem } = this.getScrollState();
+            if (
+              focusedItem &&
+            ((findNode(this.listRef).scrollTop
+            + findNode(this.listRef).offsetTop) > focusedItem.offsetTop)
+            ) {
+              findNode(this.listRef).scrollTop -=
+              focusedItem.offsetHeight;
+            } else if (this.state.focus === this.props.options.length - 1) {
+              findNode(this.listRef).scrollTop = threshold;
+            }
+          },
+        );
         break;
       case 'Enter':
         if (focus) {
@@ -112,10 +153,16 @@ class Select extends Component {
   renderOptions = (options) => {
     const { theme } = this.props;
     const { focus } = this.state;
+
     return options.map((option, index) => (
       /* eslint-disable jsx-a11y/click-events-have-key-events */
       /* eslint-disable jsx-a11y/no-static-element-interactions */
       <span
+        ref={(ref) => {
+          if (focus === index) {
+            this.focusedElement = ref;
+          }
+        }}
         className={cx(theme.option, { [`${theme['option-hover']}`]: (focus === index) })}
         onClick={() => this.handleSelect(option)}
         key={option.label}
@@ -128,35 +175,45 @@ class Select extends Component {
   render() {
     const { options, theme, className } = this.props;
     const { selected, open } = this.state;
+
+    const selectInputWrapperProps = {
+      id: 'select',
+      className: cx(
+        theme.selectInput,
+        { [theme['border-animation']]: open },
+      ),
+      onClick: this.toggleMenu,
+      onBlur: this.hideMenu,
+      onKeyDown: this.handleKeyDown,
+      tabIndex: 0,
+    };
+
+    const dropdownProps = {
+      id: 'select-dropdown',
+      className: cx(theme.menu, theme.show),
+      onMouseEnter: () => this.blockOnBlur(true),
+      onMouseLeave: () => this.blockOnBlur(false),
+      ref: (ref) => {
+        this.listRef = ref;
+      },
+    };
+
     const classes = cx(theme.select, className);
-    const menuclass = cx(theme.menu, theme.show);
     const arrowclass = cx(theme.arrow, open ? theme.up : theme.down);
     return (
       <div className={classes}>
-        <div
-          id="select"
-          className={theme.selectInput}
-          onClick={this.toggleMenu}
-          onBlur={this.hideMenu}
-          onKeyDown={this.handleKeyDown}
-          /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-          tabIndex={0}
-        >
-          <input
-            className={theme.selected}
-            type="text"
-            value={selected.label}
-            disabled
-          />
+        <div {...selectInputWrapperProps} >
+          <div className={theme.selected}>
+            <input
+              type="text"
+              value={selected.label}
+              disabled
+            />
+          </div>
           <div className={arrowclass} />
         </div>
         {open && (
-          <div
-            id="select-dropdown"
-            className={menuclass}
-            onMouseEnter={() => this.blockOnBlur(true)}
-            onMouseLeave={() => this.blockOnBlur(false)}
-          >
+          <div {...dropdownProps} >
             {this.renderOptions(options)}
           </div>
         )}

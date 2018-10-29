@@ -18,8 +18,12 @@ import Menu from './menu';
 import Modal from './modal';
 import MultiSelect from './multiselect';
 import Navbar from './navbar';
+import Popover from './popover';
 import Preloader from './preloader';
 import Select from './select';
+import Slider from './slider';
+import Carousel from './carousel';
+import ProgressBar from './progressbar';
 
 export default {
   Button,
@@ -40,8 +44,12 @@ export default {
   Modal,
   MultiSelect,
   Navbar,
+  Popover,
   Preloader,
   Select,
+  Slider,
+  Carousel,
+  ProgressBar,
 };
 
 // ReactDOM.render(
